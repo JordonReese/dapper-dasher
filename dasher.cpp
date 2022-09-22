@@ -11,12 +11,17 @@ struct AnimData
 
 int main() {
 
+  // array for windowsize
+  int windowDimensions[2];
+  windowDimensions[0] = 750;
+  windowDimensions[1] = 500;
+
   // create window dimension values
-  const int windowWidth{750};
-  const int windowHeight{500};
+  // const int windowWidth{750};
+  // const int windowHeight{500};
 
   // draw the window
-  InitWindow(windowWidth, windowHeight, "Dapper Dasher");
+  InitWindow(windowDimensions[0], windowDimensions[1], "Dapper Dasher");
 
   // acceleration due to gravity - pixels per second per second
   const int gravity{1'000};
@@ -31,8 +36,8 @@ int main() {
   scarfyData.rec.height = scarfy.height;
   scarfyData.rec.x = 0;
   scarfyData.rec.y = 0;
-  scarfyData.pos.x = windowWidth/2 - scarfyData.rec.width/2;
-  scarfyData.pos.y = windowHeight - scarfyData.rec.height;
+  scarfyData.pos.x = windowDimensions[0]/2 - scarfyData.rec.width/2;
+  scarfyData.pos.y = windowDimensions[1] - scarfyData.rec.height;
   scarfyData.frame = 0;
   scarfyData.updateTime = (1.0/12.0);
   scarfyData.runningTime = 0.0;
@@ -44,7 +49,7 @@ int main() {
   // initalized each variable using inline initilization with curly braces
   AnimData nebulaData{ 
     {0.0, 0.0, nebula.width/8, nebula.height/8}, // rectangle rec
-    {windowWidth, windowHeight-nebula.height/8}, // vector2 pos
+    {windowDimensions[0], windowDimensions[1]-nebula.height/8}, // vector2 pos
     0, // int frame
     1.0/12.0, // float updateTime
     0.0 // float runningTime
@@ -53,11 +58,15 @@ int main() {
   // AnimaData for nebula2
   AnimData nebula2Data {
     {0.0, 0.0, nebula.width/8, nebula.height/8}, // rectangle rec
-    {windowWidth, windowHeight - (2 * nebula.height/8)}, // vector2 pos
+    {windowDimensions[0], windowDimensions[1] - (2 * nebula.height/8)}, // vector2 pos
     0, // int frame
     1.0/16.0, // float updateTime
     0.0 // float runningTime
   };
+
+  // array of animData
+  AnimData nebulaArray[2]{ nebulaData, nebula2Data };
+  
 
   // integer for nebula X velocity (pixels per second)
   // because the nebula is moving right to left it has to move using a NEGATIVE value
@@ -119,43 +128,43 @@ int main() {
     ClearBackground(RAYWHITE);
 
     // draw nebula
-    DrawTextureRec(nebula, nebulaData.rec, nebulaData.pos, WHITE);
+    DrawTextureRec(nebula, nebulaArray[0].rec, nebulaArray[0].pos, WHITE);
 
     // delta time (time since last frame)
     const float dT{GetFrameTime()};
     
     // make the nebula move across the screen
-    nebulaData.pos.x += nebulaVel * dT;
+    nebulaArray[0].pos.x += nebulaVel * dT;
 
     // update nebula running time
-    nebulaData.runningTime += dT;
+    nebulaArray[0].runningTime += dT;
 
     // check to see if runtime is greater than last frame update
-    if (nebulaData.runningTime >= nebulaData.updateTime){
+    if (nebulaArray[0].runningTime >= nebulaArray[0].updateTime){
       // reset nebula running time
-      nebulaData.runningTime = 0.0;
+      nebulaArray[0].runningTime = 0.0;
 
       // update animation frame
-      nebulaData.rec.x = nebulaData.frame * nebulaData.rec.width;
-      nebulaData.frame++;
-      if (nebulaData.frame > 7){
+      nebulaArray[0].rec.x = nebulaArray[0].frame * nebulaArray[0].rec.width;
+      nebulaArray[0].frame++;
+      if (nebulaArray[0].frame > 7){
         // reset frame back to 0 if it's exceded 8
-        nebulaData.frame = 0;
+        nebulaArray[0].frame = 0;
       }
     }
 
     // move the second nebula across the screen
-    nebula2Data.pos.x += nebula2Vel * dT;
-    nebula2Data.runningTime += dT;
+    nebulaArray[1].pos.x += nebula2Vel * dT;
+    nebulaArray[1].runningTime += dT;
 
     // draw and animate the second nebula
-    DrawTextureRec(nebula, nebula2Data.rec, nebula2Data.pos, GREEN);
-    if (nebula2Data.runningTime >= nebula2Data.updateTime){
-      nebula2Data.runningTime = 0.0;
-      nebula2Data.rec.x = nebula2Data.frame * nebula2Data.rec.width;
-      nebula2Data.frame++;
-      if (nebula2Data.frame > 7){
-        nebula2Data.frame = 0;
+    DrawTextureRec(nebula, nebulaArray[1].rec, nebulaArray[1].pos, GREEN);
+    if (nebulaArray[1].runningTime >= nebulaArray[1].updateTime){
+      nebulaArray[1].runningTime = 0.0;
+      nebulaArray[1].rec.x = nebulaArray[1].frame * nebulaArray[1].rec.width;
+      nebulaArray[1].frame++;
+      if (nebulaArray[1].frame > 7){
+        nebulaArray[1].frame = 0;
       }
     }
 
@@ -180,7 +189,7 @@ int main() {
     }
 
     // check if scarfy is on ground
-    if (scarfyData.pos.y >= windowHeight - scarfyData.rec.width){  
+    if (scarfyData.pos.y >= windowDimensions[1] - scarfyData.rec.width){  
       // scarfy is on graound
       rectangle_velocity = 0;
       isInAir = false;

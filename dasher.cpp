@@ -55,12 +55,11 @@ int main() {
     nebulaArray[i].rec.y = 0.0;
     nebulaArray[i].rec.width = nebula.width/8;
     nebulaArray[i].rec.height = nebula.height/8;
+    nebulaArray[i].pos.x = windowDimensions[0];
     nebulaArray[i].pos.y = windowDimensions[1] - nebula.height/8;
     nebulaArray[i].frame = 0;
     nebulaArray[i].runningTime = 0.0;
   }
-
-  nebulaArray[0].pos.x = windowDimensions[0];
   nebulaArray[1].pos.y = windowDimensions[1] - (2 * nebula.height/8);
   nebulaArray[2].pos.x = windowDimensions[0] + 300;
   

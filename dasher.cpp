@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include <stdlib.h> // include for rand();
 
 struct AnimData
 {
@@ -47,7 +48,7 @@ int main() {
 
 
   // size of nebulaArray
-  int sizeOfNebulaArray{3};
+  int sizeOfNebulaArray{10};
   
   // array of animData
   AnimData nebulaArray[sizeOfNebulaArray]{};
@@ -59,19 +60,27 @@ int main() {
     nebulaArray[i].rec.width = nebula.width/8;
     nebulaArray[i].rec.height = nebula.height/8;
     nebulaArray[i].pos.x = windowDimensions[0];
+    nebulaArray[i].pos.y = windowDimensions[1] + (rand() % 500 + 100);
     nebulaArray[i].pos.y = windowDimensions[1] - nebula.height/8;
     nebulaArray[i].frame = 0;
     nebulaArray[i].runningTime = 0.0;
   }
 
-  nebulaArray[1].pos.y = windowDimensions[1] - (2 * nebula.height/8);
-  nebulaArray[2].pos.x = windowDimensions[0] - 600;
-  
+  // nebulaArray[1].pos.y = windowDimensions[1] - (2 * nebula.height/8);
+  // nebulaArray[2].pos.x = windowDimensions[0] + 600;
 
-  // integer for nebula X velocity (pixels per second)
-  // because the nebula is moving right to left it has to move using a NEGATIVE value
-  int nebulaVel{-200};
-  int nebula2Vel{-100};
+  // array of nebula velocities
+  int nebulaVelArray[10];
+  for (int i = 0; i < 3; i++){
+    nebulaVelArray[i] = (rand() % 500 + 100) * (-1);
+  }
+
+
+  // // integer for nebula X velocity (pixels per second)
+  // // because the nebula is moving right to left it has to move using a NEGATIVE value
+  // int nebulaVel{-200};
+  // int nebula2Vel{-100};
+  // int nebula3Vel{-100};
 
   // jump velocity pixels per second
   int jump_vel{-600};
@@ -174,12 +183,18 @@ int main() {
 
     // delta time (time since last frame)
     const float dT{GetFrameTime()};
-    
-    // make the nebula move across the screen
-    nebulaArray[0].pos.x += nebulaVel * dT;
 
-    // update nebula running time
-    nebulaArray[0].runningTime += dT;
+    // using a for loop to move nebulas across the screen
+    for (int i = 0; i < sizeOfNebulaArray; i++){
+      nebulaArray[i].pos.x += nebulaVelArray[i] * dT;
+      nebulaArray[i].runningTime += dT;
+    }
+    
+    // // make the nebula move across the screen
+    // nebulaArray[0].pos.x += nebulaVel * dT;
+
+    // // update nebula running time
+    // nebulaArray[0].runningTime += dT;
 
     // using a for loop to create each nebula
     for (int i = 0; i < sizeOfNebulaArray; i++){
@@ -201,9 +216,9 @@ int main() {
       }
     }
 
-    // move the second nebula across the screen
-    nebulaArray[1].pos.x += nebula2Vel * dT;
-    nebulaArray[1].runningTime += dT;
+    // // move the second nebula across the screen
+    // nebulaArray[1].pos.x += nebula2Vel * dT;
+    // nebulaArray[1].runningTime += dT;
 
     // draw and animate the second nebula
     // DrawTextureRec(nebula, nebulaArray[1].rec, nebulaArray[1].pos, GREEN);

@@ -45,12 +45,15 @@ int main() {
   // setting up nebula
   Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
 
+
+  // size of nebulaArray
+  int sizeOfNebulaArray{3};
   
   // array of animData
-  AnimData nebulaArray[3]{};
+  AnimData nebulaArray[sizeOfNebulaArray]{};
 
   // for loop
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < sizeOfNebulaArray; i++) {
     nebulaArray[i].rec.x = 0.0;
     nebulaArray[i].rec.y = 0.0;
     nebulaArray[i].rec.width = nebula.width/8;
@@ -60,8 +63,9 @@ int main() {
     nebulaArray[i].frame = 0;
     nebulaArray[i].runningTime = 0.0;
   }
+
   nebulaArray[1].pos.y = windowDimensions[1] - (2 * nebula.height/8);
-  nebulaArray[2].pos.x = windowDimensions[0] + 300;
+  nebulaArray[2].pos.x = windowDimensions[0] - 600;
   
 
   // integer for nebula X velocity (pixels per second)
@@ -135,6 +139,28 @@ int main() {
   //   0.0 // float runningTime
   // };
 
+  // changed to using a for loop for animation update
+  // // check to see if runtime is greater than last frame update
+    // if (nebulaArray[0].runningTime >= nebulaArray[0].updateTime){
+    //   // reset nebula running time
+    //   nebulaArray[0].runningTime = 0.0;
+    //   // update animation frame
+    //   nebulaArray[0].rec.x = nebulaArray[0].frame * nebulaArray[0].rec.width;
+    //   nebulaArray[0].frame++;
+    //   if (nebulaArray[0].frame > 7){
+    //     // reset frame back to 0 if it's exceded 8
+    //     nebulaArray[0].frame = 0;
+    //   }
+    // }
+     // if (nebulaArray[1].runningTime >= nebulaArray[1].updateTime){
+    //   nebulaArray[1].runningTime = 0.0;
+    //   nebulaArray[1].rec.x = nebulaArray[1].frame * nebulaArray[1].rec.width;
+    //   nebulaArray[1].frame++;
+    //   if (nebulaArray[1].frame > 7){
+    //     nebulaArray[1].frame = 0;
+    //   }
+    // }
+
 
   while (!WindowShouldClose()) 
   {
@@ -144,7 +170,7 @@ int main() {
     ClearBackground(RAYWHITE);
 
     // draw nebula
-    DrawTextureRec(nebula, nebulaArray[0].rec, nebulaArray[0].pos, WHITE);
+    // DrawTextureRec(nebula, nebulaArray[0].rec, nebulaArray[0].pos, WHITE);
 
     // delta time (time since last frame)
     const float dT{GetFrameTime()};
@@ -155,17 +181,23 @@ int main() {
     // update nebula running time
     nebulaArray[0].runningTime += dT;
 
-    // check to see if runtime is greater than last frame update
-    if (nebulaArray[0].runningTime >= nebulaArray[0].updateTime){
-      // reset nebula running time
-      nebulaArray[0].runningTime = 0.0;
+    // using a for loop to create each nebula
+    for (int i = 0; i < sizeOfNebulaArray; i++){
+      DrawTextureRec(nebula, nebulaArray[i].rec, nebulaArray[i].pos, WHITE);
+    }
 
-      // update animation frame
-      nebulaArray[0].rec.x = nebulaArray[0].frame * nebulaArray[0].rec.width;
-      nebulaArray[0].frame++;
-      if (nebulaArray[0].frame > 7){
-        // reset frame back to 0 if it's exceded 8
-        nebulaArray[0].frame = 0;
+    // using a for loop to update the animation for each nebula
+    for (int i = 0; i < sizeOfNebulaArray; i++){
+      if (nebulaArray[i].runningTime >= nebulaArray[i].updateTime){
+        // reset nebula running time
+        nebulaArray[i].runningTime = 0.0;
+        // update animation frame
+        nebulaArray[i].rec.x = nebulaArray[i].frame * nebulaArray[i].rec.width;
+        nebulaArray[i].frame++;
+        if (nebulaArray[i].frame > 7){
+          // reset frame back to 0 if it's exceded 8
+          nebulaArray[i].frame = 0;
+        }
       }
     }
 
@@ -174,16 +206,8 @@ int main() {
     nebulaArray[1].runningTime += dT;
 
     // draw and animate the second nebula
-    DrawTextureRec(nebula, nebulaArray[1].rec, nebulaArray[1].pos, GREEN);
-    if (nebulaArray[1].runningTime >= nebulaArray[1].updateTime){
-      nebulaArray[1].runningTime = 0.0;
-      nebulaArray[1].rec.x = nebulaArray[1].frame * nebulaArray[1].rec.width;
-      nebulaArray[1].frame++;
-      if (nebulaArray[1].frame > 7){
-        nebulaArray[1].frame = 0;
-      }
-    }
-
+    // DrawTextureRec(nebula, nebulaArray[1].rec, nebulaArray[1].pos, GREEN);
+  
     // draw Scarfy
     DrawTextureRec(scarfy, scarfyData.rec, scarfyData.pos, WHITE); 
 

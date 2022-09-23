@@ -45,27 +45,24 @@ int main() {
   // setting up nebula
   Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
 
-  // AnimData for nebula
-  // initalized each variable using inline initilization with curly braces
-  AnimData nebulaData{ 
-    {0.0, 0.0, nebula.width/8, nebula.height/8}, // rectangle rec
-    {windowDimensions[0], windowDimensions[1]-nebula.height/8}, // vector2 pos
-    0, // int frame
-    1.0/12.0, // float updateTime
-    0.0 // float runningTime
-  };
-
-  // AnimaData for nebula2
-  AnimData nebula2Data {
-    {0.0, 0.0, nebula.width/8, nebula.height/8}, // rectangle rec
-    {windowDimensions[0], windowDimensions[1] - (2 * nebula.height/8)}, // vector2 pos
-    0, // int frame
-    1.0/16.0, // float updateTime
-    0.0 // float runningTime
-  };
-
+  
   // array of animData
-  AnimData nebulaArray[2]{ nebulaData, nebula2Data };
+  AnimData nebulaArray[3]{};
+
+  // for loop
+  for (int i = 0; i < 3; i++) {
+    nebulaArray[i].rec.x = 0.0;
+    nebulaArray[i].rec.y = 0.0;
+    nebulaArray[i].rec.width = nebula.width/8;
+    nebulaArray[i].rec.height = nebula.height/8;
+    nebulaArray[i].pos.y = windowDimensions[1] - nebula.height/8;
+    nebulaArray[i].frame = 0;
+    nebulaArray[i].runningTime = 0.0;
+  }
+
+  nebulaArray[0].pos.x = windowDimensions[0];
+  nebulaArray[1].pos.y = windowDimensions[1] - (2 * nebula.height/8);
+  nebulaArray[2].pos.x = windowDimensions[0] + 300;
   
 
   // integer for nebula X velocity (pixels per second)
@@ -119,6 +116,26 @@ int main() {
   // update time float - the amount of time that passes between each animation frame
   // const float updateTime{1.0 / 12.0};
   // float runningTime{};
+
+  // switched to using a for loop to initalize all the values for the animdata 
+  // AnimData for nebula
+  // initalized each variable using inline initilization with curly braces
+  // AnimData nebulaData{ 
+  //   {0.0, 0.0, nebula.width/8, nebula.height/8}, // rectangle rec
+  //   {windowDimensions[0], windowDimensions[1]-nebula.height/8}, // vector2 pos
+  //   0, // int frame
+  //   1.0/12.0, // float updateTime
+  //   0.0 // float runningTime
+  // };
+  // // AnimaData for nebula2
+  // AnimData nebula2Data {
+  //   {0.0, 0.0, nebula.width/8, nebula.height/8}, // rectangle rec
+  //   {windowDimensions[0], windowDimensions[1] - (2 * nebula.height/8)}, // vector2 pos
+  //   0, // int frame
+  //   1.0/16.0, // float updateTime
+  //   0.0 // float runningTime
+  // };
+
 
   while (!WindowShouldClose()) 
   {

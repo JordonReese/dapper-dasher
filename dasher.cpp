@@ -46,9 +46,8 @@ int main() {
   // setting up nebula
   Texture2D nebula = LoadTexture("textures/12_nebula_spritesheet.png");
 
-
   // size of nebulaArray
-  int sizeOfNebulaArray{10};
+  int sizeOfNebulaArray{6};
   
   // array of animData
   AnimData nebulaArray[sizeOfNebulaArray]{};
@@ -59,28 +58,15 @@ int main() {
     nebulaArray[i].rec.y = 0.0;
     nebulaArray[i].rec.width = nebula.width/8;
     nebulaArray[i].rec.height = nebula.height/8;
-    nebulaArray[i].pos.x = windowDimensions[0];
-    nebulaArray[i].pos.y = windowDimensions[1] + (rand() % 500 + 100);
+    nebulaArray[i].pos.x = windowDimensions[0] + i * 300;
     nebulaArray[i].pos.y = windowDimensions[1] - nebula.height/8;
     nebulaArray[i].frame = 0;
     nebulaArray[i].runningTime = 0.0;
   }
 
-  // nebulaArray[1].pos.y = windowDimensions[1] - (2 * nebula.height/8);
-  // nebulaArray[2].pos.x = windowDimensions[0] + 600;
-
-  // array of nebula velocities
-  int nebulaVelArray[10];
-  for (int i = 0; i < 3; i++){
-    nebulaVelArray[i] = (rand() % 500 + 100) * (-1);
-  }
-
-
   // // integer for nebula X velocity (pixels per second)
   // // because the nebula is moving right to left it has to move using a NEGATIVE value
-  // int nebulaVel{-200};
-  // int nebula2Vel{-100};
-  // int nebula3Vel{-100};
+  int nebulaVel{-200};
 
   // jump velocity pixels per second
   int jump_vel{-600};
@@ -106,12 +92,10 @@ int main() {
   // Vector2 scarfyPos;
   // scarfyPos.x = windowWidth/2 - scarfyRec.width/2;
   // scarfyPos.y = windowHeight - scarfyRec.height;
-
-   // You can use brace initalization to initalize each value on the same line as the object definition
+  // You can use brace initalization to initalize each value on the same line as the object definition
   // above, I used the regular multi-line initialization for scarfy
   // Rectangle nebulaRec{0.0, 0.0, nebula.width/8.0, nebula.height/8.0};
   // Vector2 nebulaPos{windowWidth, windowHeight-nebulaRec.height};
-
   // variable for other instances of nebulas
   // Rectangle nebula2Rec{0.0, 0.0, nebula.width/8, nebula.height/8};
   // Vector2 nebula2Pos{windowWidth, windowHeight - (2 * nebulaRec.height)};
@@ -128,7 +112,6 @@ int main() {
   // update time float - the amount of time that passes between each animation frame
   // const float updateTime{1.0 / 12.0};
   // float runningTime{};
-
   // switched to using a for loop to initalize all the values for the animdata 
   // AnimData for nebula
   // initalized each variable using inline initilization with curly braces
@@ -147,55 +130,76 @@ int main() {
   //   1.0/16.0, // float updateTime
   //   0.0 // float runningTime
   // };
-
   // changed to using a for loop for animation update
   // // check to see if runtime is greater than last frame update
-    // if (nebulaArray[0].runningTime >= nebulaArray[0].updateTime){
-    //   // reset nebula running time
-    //   nebulaArray[0].runningTime = 0.0;
-    //   // update animation frame
-    //   nebulaArray[0].rec.x = nebulaArray[0].frame * nebulaArray[0].rec.width;
-    //   nebulaArray[0].frame++;
-    //   if (nebulaArray[0].frame > 7){
-    //     // reset frame back to 0 if it's exceded 8
-    //     nebulaArray[0].frame = 0;
-    //   }
-    // }
-     // if (nebulaArray[1].runningTime >= nebulaArray[1].updateTime){
-    //   nebulaArray[1].runningTime = 0.0;
-    //   nebulaArray[1].rec.x = nebulaArray[1].frame * nebulaArray[1].rec.width;
-    //   nebulaArray[1].frame++;
-    //   if (nebulaArray[1].frame > 7){
-    //     nebulaArray[1].frame = 0;
-    //   }
-    // }
-
+  // if (nebulaArray[0].runningTime >= nebulaArray[0].updateTime){
+  //   // reset nebula running time
+  //   nebulaArray[0].runningTime = 0.0;
+  //   // update animation frame
+  //   nebulaArray[0].rec.x = nebulaArray[0].frame * nebulaArray[0].rec.width;
+  //   nebulaArray[0].frame++;
+  //   if (nebulaArray[0].frame > 7){
+  //     // reset frame back to 0 if it's exceded 8
+  //     nebulaArray[0].frame = 0;
+  //   }
+  // }
+  // if (nebulaArray[1].runningTime >= nebulaArray[1].updateTime){
+  //   nebulaArray[1].runningTime = 0.0;
+  //   nebulaArray[1].rec.x = nebulaArray[1].frame * nebulaArray[1].rec.width;
+  //   nebulaArray[1].frame++;
+  //   if (nebulaArray[1].frame > 7){
+  //     nebulaArray[1].frame = 0;
+  //   }
+  // }
+  // original way of updating nebula animations
+  // // make the nebula move across the screen
+  // nebulaArray[0].pos.x += nebulaVel * dT;
+  // // update nebula running time
+  // nebulaArray[0].runningTime += dT;
+  // // move the second nebula across the screen
+  // nebulaArray[1].pos.x += nebula2Vel * dT;
+  // nebulaArray[1].runningTime += dT;
+  // draw and animate the second nebula
+  // DrawTextureRec(nebula, nebulaArray[1].rec, nebulaArray[1].pos, GREEN);
+  // draw nebula
+  // DrawTextureRec(nebula, nebulaArray[0].rec, nebulaArray[0].pos, WHITE);
 
   while (!WindowShouldClose()) 
   {
+    // delta time (time since last frame)
+    const float dT{GetFrameTime()};
 
     BeginDrawing();
 
     ClearBackground(RAYWHITE);
 
-    // draw nebula
-    // DrawTextureRec(nebula, nebulaArray[0].rec, nebulaArray[0].pos, WHITE);
+    // check if scarfy is on ground
+    if (scarfyData.pos.y >= windowDimensions[1] - scarfyData.rec.width){  
+      // scarfy is on graound
+      rectangle_velocity = 0;
+      isInAir = false;
+    } else {
+      // scarfy is in air - apply gravity
+      rectangle_velocity += gravity * dT;
+      isInAir = true;
+    }
 
-    // delta time (time since last frame)
-    const float dT{GetFrameTime()};
+    // check for jumping
+    if (IsKeyPressed(KEY_SPACE) && isInAir == false){
+      rectangle_velocity += jump_vel;
+    }
+
+    // update position
+    scarfyData.pos.y += rectangle_velocity * dT;
+
+    
 
     // using a for loop to move nebulas across the screen
     for (int i = 0; i < sizeOfNebulaArray; i++){
-      nebulaArray[i].pos.x += nebulaVelArray[i] * dT;
+      nebulaArray[i].pos.x += nebulaVel * dT;
       nebulaArray[i].runningTime += dT;
     }
     
-    // // make the nebula move across the screen
-    // nebulaArray[0].pos.x += nebulaVel * dT;
-
-    // // update nebula running time
-    // nebulaArray[0].runningTime += dT;
-
     // using a for loop to create each nebula
     for (int i = 0; i < sizeOfNebulaArray; i++){
       DrawTextureRec(nebula, nebulaArray[i].rec, nebulaArray[i].pos, WHITE);
@@ -216,13 +220,6 @@ int main() {
       }
     }
 
-    // // move the second nebula across the screen
-    // nebulaArray[1].pos.x += nebula2Vel * dT;
-    // nebulaArray[1].runningTime += dT;
-
-    // draw and animate the second nebula
-    // DrawTextureRec(nebula, nebulaArray[1].rec, nebulaArray[1].pos, GREEN);
-  
     // draw Scarfy
     DrawTextureRec(scarfy, scarfyData.rec, scarfyData.pos, WHITE); 
 
@@ -242,25 +239,6 @@ int main() {
         }
       }
     }
-
-    // check if scarfy is on ground
-    if (scarfyData.pos.y >= windowDimensions[1] - scarfyData.rec.width){  
-      // scarfy is on graound
-      rectangle_velocity = 0;
-      isInAir = false;
-    } else {
-      // scarfy is in air - apply gravity
-      rectangle_velocity += gravity * dT;
-      isInAir = true;
-    }
-
-    // check for jumping
-    if (IsKeyPressed(KEY_SPACE) && isInAir == false){
-      rectangle_velocity += jump_vel;
-    }
-
-    // update position
-    scarfyData.pos.y += rectangle_velocity * dT;
 
     EndDrawing();
   }

@@ -10,6 +10,10 @@ struct AnimData
   float runningTime;
 };
 
+bool isOnGround(AnimData data, int windowHeight){
+  return data.pos.y >= windowHeight-data.rec.height;
+}
+
 int main() {
 
   // array for windowsize
@@ -163,6 +167,16 @@ int main() {
   // DrawTextureRec(nebula, nebulaArray[1].rec, nebulaArray[1].pos, GREEN);
   // draw nebula
   // DrawTextureRec(nebula, nebulaArray[0].rec, nebulaArray[0].pos, WHITE);
+  // Old if statement for checking if scarfy is on the ground
+  // if (scarfyData.pos.y >= windowDimensions[1] - scarfyData.rec.height){  
+  //     // scarfy is on graound
+  //     rectangle_velocity = 0;
+  //     isInAir = false;
+  //   } else {
+  //     // scarfy is in air - apply gravity
+  //     rectangle_velocity += gravity * dT;
+  //     isInAir = true;
+  //   }
 
   while (!WindowShouldClose()) 
   {
@@ -173,8 +187,28 @@ int main() {
 
     ClearBackground(RAYWHITE);
 
+        // draw Scarfy
+    DrawTextureRec(scarfy, scarfyData.rec, scarfyData.pos, WHITE); 
+
+    // update running time
+    scarfyData.runningTime += dT;
+
+    if (scarfyData.runningTime >= scarfyData.updateTime){
+      // reset running time
+      scarfyData.runningTime = 0.0;
+
+      // update animation frame
+      if (isInAir == false){
+        scarfyData.rec.x = scarfyData.frame * scarfyData.rec.width;
+        scarfyData.frame++;
+        if (scarfyData.frame > 5){
+          scarfyData.frame = 0;
+        }
+      }
+    }
+
     // check if scarfy is on ground
-    if (scarfyData.pos.y >= windowDimensions[1] - scarfyData.rec.width){  
+    if(isOnGround(scarfyData, windowDimensions[1])){  
       // scarfy is on graound
       rectangle_velocity = 0;
       isInAir = false;
@@ -191,8 +225,6 @@ int main() {
 
     // update position
     scarfyData.pos.y += rectangle_velocity * dT;
-
-    
 
     // using a for loop to move nebulas across the screen
     for (int i = 0; i < sizeOfNebulaArray; i++){
@@ -216,26 +248,6 @@ int main() {
         if (nebulaArray[i].frame > 7){
           // reset frame back to 0 if it's exceded 8
           nebulaArray[i].frame = 0;
-        }
-      }
-    }
-
-    // draw Scarfy
-    DrawTextureRec(scarfy, scarfyData.rec, scarfyData.pos, WHITE); 
-
-    // update running time
-    scarfyData.runningTime += dT;
-
-    if (scarfyData.runningTime >= scarfyData.updateTime){
-      // reset running time
-      scarfyData.runningTime = 0.0;
-
-      // update animation frame
-      if (isInAir == false){
-        scarfyData.rec.x = scarfyData.frame * scarfyData.rec.width;
-        scarfyData.frame++;
-        if (scarfyData.frame > 5){
-          scarfyData.frame = 0;
         }
       }
     }
